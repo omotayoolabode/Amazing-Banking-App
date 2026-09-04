@@ -1,0 +1,8 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/Amazing-Banking-App.slnx/FileContentIndex
+/.vs/Amazing-Banking-App.slnx/v18
+/.vs
+/Amazings API/obj
