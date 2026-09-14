@@ -52,5 +52,30 @@ namespace Amazings_API.Controllers
                 throw;
             }
         }
+
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromBody] CreateCustomerRecord record)
+        {
+            try
+            {
+                var customer = _dbContext.Customers.FirstOrDefault(c => c.Id == id);
+                if (customer == null)
+                {
+                    return NotFound();
+                }
+
+                customer.FirstName = record.FirstName;
+                customer.LastName = record.LastName;
+                customer.Email = record.Email;
+                customer.Phone = record.Phone;
+
+                _dbContext.SaveChanges();
+                return Ok();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
