@@ -13,6 +13,8 @@ namespace Amazings_API.Models
 
 		public string PasswordHash { get; set; }
 
+		public string Role { get; set; }
+
 		public DateTime CreatedAt { get; set; }
 	}
 }

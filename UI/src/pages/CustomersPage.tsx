@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { ApiError } from '../api/client'
 import {
   createCustomer,
@@ -121,7 +122,10 @@ export function CustomersPage() {
         </p>
         <h1 className="text-3xl font-bold text-slate-900">Customers</h1>
         <p className="max-w-2xl text-slate-600">
-          View, create, and update customers through the Amazings API.
+          View, create, and update customers through the Amazings API.{' '}
+          <Link className="font-medium text-teal-800 hover:underline" to="/register">
+            Create a login account
+          </Link>
         </p>
       </header>
 

@@ -1,4 +1,5 @@
 using Amazings_API.Persistence.Data;
+using Amazings_API.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -13,6 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AmazingsAPIContext") ?? throw new InvalidOperationException("Connection string 'AmazingsAPIContext' not found.")));
+builder.Services.AddScoped<AuthService>();
 
 const string corsPolicy = "AllowAll";
 builder.Services.AddCors(options =>

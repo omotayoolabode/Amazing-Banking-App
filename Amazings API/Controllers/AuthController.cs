@@ -1,6 +1,7 @@
 ﻿using Amazings_API.Models;
 using Amazings_API.Persistence.Data;
 using Amazings_API.Records;
+using Amazings_API.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -17,56 +18,35 @@ namespace Amazings_API.Controllers
 		private readonly ApplicationDbContext _dbContext;
 		private readonly PasswordHasher<User> _passwordHasher;
 		private readonly IConfiguration _configuration;
+		private readonly AuthService _authService;
 
 		public AuthController(
 			ApplicationDbContext dbContext,
-			IConfiguration configuration)
+			IConfiguration configuration,
+			AuthService authService)
 		{
 			_dbContext = dbContext;
 			_configuration = configuration;
+			_authService = authService;
 			_passwordHasher = new PasswordHasher<User>();
 		}
 
 		[HttpPost("register")]
 		public IActionResult Register([FromBody] RegisterRecord record)
 		{
-			var customer = _dbContext.Customers
-				.FirstOrDefault(c => c.Id == record.CustomerId);
+			var result = _authService.Register(record);
 
-			if (customer == null)
+			if (!result.Succeeded)
 			{
-				return NotFound("Customer not found.");
+				return BadRequest(new { message = result.Message });
 			}
-
-			var existingUser = _dbContext.Users
-				.FirstOrDefault(u => u.Username == record.Username);
-
-			if (existingUser != null)
-			{
-				return BadRequest("Username already exists.");
-			}
-
-			var user = new User
-			{
-				CustomerId = record.CustomerId,
-				Username = record.Username,
-				CreatedAt = DateTime.UtcNow
-			};
-
-			user.PasswordHash = _passwordHasher.HashPassword(
-				user,
-				record.Password
-			);
-
-			_dbContext.Users.Add(user);
-			_dbContext.SaveChanges();
 
 			return Ok(new
 			{
-				message = "Registration successful.",
-				userId = user.Id,
-				username = user.Username,
-				customerId = user.CustomerId
+				message = result.Message,
+				userId = result.UserId,
+				username = result.Username,
+				customerId = result.CustomerId
 			});
 		}
 
